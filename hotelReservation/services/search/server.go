@@ -38,6 +38,7 @@ type Server struct {
 	KnativeDns string
 	Registry   *registry.Client
 	uuid       string
+	pb.UnimplementedSearchServer
 }
 
 // Run starts the server

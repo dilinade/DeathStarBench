@@ -356,19 +356,19 @@ func (s *Server) reservationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check username and password
-	recResp, err := s.userClient.CheckUser(ctx, &user.Request{
-		Username: username,
-		Password: password,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//recResp, err := s.userClient.CheckUser(ctx, &user.Request{
+	//	Username: username,
+	//	Password: password,
+	//})
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
 
 	str := "Reserve successfully!"
-	if recResp.Correct == false {
-		str = "Failed. Please check your username and password. "
-	}
+	//if recResp.Correct == false {
+	//	str = "Failed. Please check your username and password. "
+	//}
 
 	// Make reservation
 	resResp, err := s.reservationClient.MakeReservation(ctx, &reservation.Request{
@@ -377,6 +377,8 @@ func (s *Server) reservationHandler(w http.ResponseWriter, r *http.Request) {
 		InDate:       inDate,
 		OutDate:      outDate,
 		RoomNumber:   int32(numberOfRoom),
+		Username:     username,
+		Password:     password,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

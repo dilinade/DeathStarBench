@@ -41,6 +41,7 @@ type Server struct {
 	Registry     *registry.Client
 	MemcClient   *memcache.Client
 	uuid         string
+	pb.UnimplementedRateServer
 }
 
 // Run starts the server

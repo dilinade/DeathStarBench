@@ -1,19 +1,20 @@
 package reservation
 
 import (
+	"github.com/harlow/go-micro-services/dialer"
+	user "github.com/harlow/go-micro-services/services/user/proto"
 	// "encoding/json"
 	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/harlow/go-micro-services/registry"
 	pb "github.com/harlow/go-micro-services/services/reservation/proto"
 	"github.com/harlow/go-micro-services/tls"
-	"github.com/opentracing/opentracing-go"
+	opentracing "github.com/opentracing/opentracing-go"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
 	// "io/ioutil"
@@ -38,7 +39,10 @@ type Server struct {
 	MongoSession *mgo.Session
 	Registry     *registry.Client
 	MemcClient   *memcache.Client
+	KnativeDns   string
+	UserClient   user.UserClient
 	uuid         string
+	pb.UnimplementedReservationServer
 }
 
 // Run starts the server
@@ -103,10 +107,53 @@ func (s *Server) Shutdown() {
 	s.Registry.Deregister(s.uuid)
 }
 
+func (s *Server) getGprcConn(name string) (*grpc.ClientConn, error) {
+	log.Info().Msg("get Grpc conn is :")
+	log.Info().Msg(s.KnativeDns)
+	log.Info().Msg(fmt.Sprintf("%s.%s", name, s.KnativeDns))
+	if s.KnativeDns != "" {
+		return dialer.Dial(
+			fmt.Sprintf("%s.%s", name, s.KnativeDns),
+			dialer.WithTracer(s.Tracer))
+	} else {
+		return dialer.Dial(
+			name,
+			dialer.WithTracer(s.Tracer),
+			dialer.WithBalancer(s.Registry.Client),
+		)
+	}
+}
+
+func (s *Server) initUserClient(name string) error {
+	conn, err := s.getGprcConn(name)
+	if err != nil {
+		return fmt.Errorf("dialer error: %v", err)
+	}
+	s.UserClient = user.NewUserClient(conn)
+	return nil
+}
+
 // MakeReservation makes a reservation based on given information
 func (s *Server) MakeReservation(ctx context.Context, req *pb.Request) (*pb.Result, error) {
+
+	if err := s.initUserClient("srv-user"); err != nil {
+		log.Panic().Msgf("Tried to initiate connection to user, but got error [%v]", err.Error())
+	}
+
+	recResp, err := s.UserClient.CheckUser(ctx, &user.Request{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		log.Panic().Msgf("Tried to check user, but got error [%v]", err.Error())
+	}
+
 	res := new(pb.Result)
 	res.HotelId = make([]string, 0)
+
+	if recResp.Correct == false {
+		return res, nil
+	}
 
 	// session, err := mgo.Dial("mongodb-reservation")
 	// if err != nil {
@@ -332,6 +379,8 @@ type reservation struct {
 	InDate       string `bson:"inDate"`
 	OutDate      string `bson:"outDate"`
 	Number       int    `bson:"number"`
+	Username     string `bson:"username"`
+	Password     string `bson:"password"`
 }
 
 type number struct {

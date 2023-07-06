@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package reservation;
 
+option go_package = "./services/reservation/proto;reservation";
+
 service Reservation {
   // MakeReservation makes a reservation based on given information
   rpc MakeReservation(Request) returns (Result);
@@ -15,6 +17,8 @@ message Request {
   string inDate = 3;
   string outDate = 4;
   int32  roomNumber = 5;
+  string username = 6;
+  string password = 7;
 }
 
 message Result {

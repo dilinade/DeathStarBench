@@ -3,7 +3,7 @@
 
 cd $(dirname $0)/../../
 
-istioIngress=$(kubectl get svc -n istio-system | grep "istio-ingressgateway" | awk '{print $3}')
+istioIngress=192.168.1.240
 namespace=default.
 domainName=.sslip.io:80
 

@@ -4,6 +4,8 @@ ports:
   - port: 8080
     targetPort: 8080
 
+type: NodePort
+
 container:
   image: yg397/openresty-thrift
   imageVersion: xenial
