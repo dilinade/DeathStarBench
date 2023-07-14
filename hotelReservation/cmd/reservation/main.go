@@ -81,6 +81,7 @@ func main() {
 		IpAddr:       serv_ip,
 		MongoSession: mongo_session,
 		MemcClient:   memc_client,
+		RegistryAddr: *consuladdr,
 	}
 
 	log.Info().Msg("Starting server...")

@@ -48,6 +48,14 @@ By default, Kuberentes’ resolver is configured with search domains. However, w
 
 
 ## Deployment ##
+Build the helm package using the following command:
+```
+helm package DeathStarBench/socialNetwork/helm-chart/social-network
+```
+Install the package using the following command:
+```
+helm install RELEASE_NAME HELM_PACKAGE_PATH
+```
 In order to deploy services using helm chart, helm needs to be installed (https://helm.sh/).
 The following line shows a default deployment of Social Nework Microservices using helm chart:
 

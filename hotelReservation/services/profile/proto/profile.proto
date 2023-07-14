@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package profile;
 
+option go_package = "./services/profile/proto;profile";
+
 service Profile {
   rpc GetProfiles(Request) returns (Result);
 }

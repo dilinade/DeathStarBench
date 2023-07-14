@@ -38,6 +38,7 @@ type Server struct {
 	IpAddr       string
 	MongoSession *mgo.Session
 	uuid         string
+	pb.UnimplementedUserServer
 }
 
 // Run starts the server

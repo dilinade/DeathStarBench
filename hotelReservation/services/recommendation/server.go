@@ -38,6 +38,7 @@ type Server struct {
 	MongoSession *mgo.Session
 	Registry     *registry.Client
 	uuid         string
+	pb.UnimplementedRecommendationServer
 }
 
 // Run starts the server

@@ -65,10 +65,11 @@ func main() {
 	srv := &search.Server{
 		Tracer: tracer,
 		// Port:     *port,
-		Port:       serv_port,
-		IpAddr:     serv_ip,
-		KnativeDns: knative_dns,
-		Registry:   registry,
+		Port:         serv_port,
+		IpAddr:       serv_ip,
+		KnativeDns:   knative_dns,
+		Registry:     registry,
+		RegistryAddr: *consuladdr,
 	}
 
 	log.Info().Msg("Starting server...")

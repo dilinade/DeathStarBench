@@ -40,6 +40,7 @@ type Server struct {
 	MongoSession *mgo.Session
 	Registry     *registry.Client
 	MemcClient   *memcache.Client
+	pb.UnimplementedProfileServer
 }
 
 // Run starts the server
