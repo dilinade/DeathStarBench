@@ -19,6 +19,7 @@ import (
 	rate "github.com/harlow/go-micro-services/services/rate/proto"
 	pb "github.com/harlow/go-micro-services/services/search/proto"
 	"github.com/harlow/go-micro-services/tls"
+	_ "github.com/mbobakov/grpc-consul-resolver" // register consul resolver
 	opentracing "github.com/opentracing/opentracing-go"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -32,12 +33,13 @@ type Server struct {
 	geoClient  geo.GeoClient
 	rateClient rate.RateClient
 
-	Tracer     opentracing.Tracer
-	Port       int
-	IpAddr     string
-	KnativeDns string
-	Registry   *registry.Client
-	uuid       string
+	Tracer       opentracing.Tracer
+	Port         int
+	IpAddr       string
+	KnativeDns   string
+	Registry     *registry.Client
+	uuid         string
+	RegistryAddr string
 	pb.UnimplementedSearchServer
 }
 
@@ -132,10 +134,11 @@ func (s *Server) getGprcConn(name string) (*grpc.ClientConn, error) {
 			fmt.Sprintf("%s.%s", name, s.KnativeDns),
 			dialer.WithTracer(s.Tracer))
 	} else {
+		target := fmt.Sprintf("consul://%s/%s", s.RegistryAddr, name)
 		return dialer.Dial(
-			name,
+			target,
 			dialer.WithTracer(s.Tracer),
-			dialer.WithBalancer(s.Registry.Client),
+			dialer.WithBalancer(s.RegistryAddr),
 		)
 	}
 }

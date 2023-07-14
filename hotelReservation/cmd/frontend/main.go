@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/harlow/go-micro-services/registry"
 	"github.com/harlow/go-micro-services/services/frontend"
 	"github.com/harlow/go-micro-services/tracing"
 	"github.com/harlow/go-micro-services/tune"
@@ -53,18 +52,17 @@ func main() {
 	log.Info().Msg("Jaeger agent initialized")
 
 	log.Info().Msgf("Initializing consul agent [host: %v]...", *consuladdr)
-	registry, err := registry.NewClient(*consuladdr)
 	if err != nil {
 		log.Panic().Msgf("Got error while initializing consul agent: %v", err)
 	}
 	log.Info().Msg("Consul agent initialized")
 
 	srv := &frontend.Server{
-		KnativeDns: knative_dns,
-		Registry:   registry,
-		Tracer:     tracer,
-		IpAddr:     serv_ip,
-		Port:       serv_port,
+		KnativeDns:   knative_dns,
+		RegistryAddr: *consuladdr,
+		Tracer:       tracer,
+		IpAddr:       serv_ip,
+		Port:         serv_port,
 	}
 
 	log.Info().Msg("Starting server...")

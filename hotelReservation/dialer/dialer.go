@@ -2,11 +2,11 @@ package dialer
 
 import (
 	"fmt"
+	"google.golang.org/grpc/credentials/insecure"
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/harlow/go-micro-services/tls"
-	consul "github.com/hashicorp/consul/api"
 	opentracing "github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -23,9 +23,9 @@ func WithTracer(tracer opentracing.Tracer) DialOption {
 }
 
 // WithBalancer enables client side load balancing
-func WithBalancer(registry *consul.Client) DialOption {
+func WithBalancer(registryAddr string) DialOption {
 	return func(name string) (grpc.DialOption, error) {
-		return grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "round_robin"}`)), nil
+		return grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`), nil
 	}
 }
 
@@ -41,7 +41,7 @@ func Dial(name string, opts ...DialOption) (*grpc.ClientConn, error) {
 	if tlsopt := tls.GetDialOpt(); tlsopt != nil {
 		dialopts = append(dialopts, tlsopt)
 	} else {
-		dialopts = append(dialopts, grpc.WithInsecure())
+		dialopts = append(dialopts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
 	for _, fn := range opts {

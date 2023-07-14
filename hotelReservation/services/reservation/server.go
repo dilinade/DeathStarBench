@@ -10,6 +10,7 @@ import (
 	"github.com/harlow/go-micro-services/registry"
 	pb "github.com/harlow/go-micro-services/services/reservation/proto"
 	"github.com/harlow/go-micro-services/tls"
+	_ "github.com/mbobakov/grpc-consul-resolver" // register consul resolver
 	opentracing "github.com/opentracing/opentracing-go"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -42,6 +43,7 @@ type Server struct {
 	KnativeDns   string
 	UserClient   user.UserClient
 	uuid         string
+	RegistryAddr string
 	pb.UnimplementedReservationServer
 }
 
@@ -116,10 +118,12 @@ func (s *Server) getGprcConn(name string) (*grpc.ClientConn, error) {
 			fmt.Sprintf("%s.%s", name, s.KnativeDns),
 			dialer.WithTracer(s.Tracer))
 	} else {
+		target := fmt.Sprintf("consul://%s/%s", s.RegistryAddr, name)
+		log.Info().Msg(fmt.Sprintf("using balancer with target %s", target))
 		return dialer.Dial(
-			name,
+			target,
 			dialer.WithTracer(s.Tracer),
-			dialer.WithBalancer(s.Registry.Client),
+			dialer.WithBalancer(s.RegistryAddr),
 		)
 	}
 }

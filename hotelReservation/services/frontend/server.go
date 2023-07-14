@@ -11,10 +11,10 @@ import (
 	recommendation "github.com/harlow/go-micro-services/services/recommendation/proto"
 	reservation "github.com/harlow/go-micro-services/services/reservation/proto"
 	user "github.com/harlow/go-micro-services/services/user/proto"
+	_ "github.com/mbobakov/grpc-consul-resolver" // register consul resolver
 	"github.com/rs/zerolog/log"
 
 	"github.com/harlow/go-micro-services/dialer"
-	"github.com/harlow/go-micro-services/registry"
 	profile "github.com/harlow/go-micro-services/services/profile/proto"
 	search "github.com/harlow/go-micro-services/services/search/proto"
 	"github.com/harlow/go-micro-services/tls"
@@ -33,7 +33,7 @@ type Server struct {
 	IpAddr               string
 	Port                 int
 	Tracer               opentracing.Tracer
-	Registry             *registry.Client
+	RegistryAddr         string
 }
 
 // Run the server
@@ -143,10 +143,12 @@ func (s *Server) getGprcConn(name string) (*grpc.ClientConn, error) {
 			fmt.Sprintf("%s.%s", name, s.KnativeDns),
 			dialer.WithTracer(s.Tracer))
 	} else {
+		target := fmt.Sprintf("consul://%s/%s", s.RegistryAddr, name)
+		log.Info().Msg(fmt.Sprintf("using balancer with target %s", target))
 		return dialer.Dial(
-			name,
+			target,
 			dialer.WithTracer(s.Tracer),
-			dialer.WithBalancer(s.Registry.Client),
+			dialer.WithBalancer(s.RegistryAddr),
 		)
 	}
 }
