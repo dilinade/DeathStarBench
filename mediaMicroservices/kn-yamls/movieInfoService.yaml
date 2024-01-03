@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: movie-info-service-knative
+spec:
+  template:
+    spec:
+      containers:
+        - image: shyamjesal/media-microservices
+          command: ["MovieInfoService"]
+          volumeMounts:
+            - mountPath: /media-microservices/config/jaeger-config.yml
+              name: movie-info-service-config
+              subPath: jaeger-config.yml
+            - mountPath: /media-microservices/config/service-config.json
+              name: movie-info-service-config
+              subPath: service-config.json
+          ports:
+            - name: http1
+              containerPort: 80
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: movie-info-service
+          name: movie-info-service-config

@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: movie-review-service-knative
+spec:
+  template:
+    spec:
+      containers:
+        - image: shyamjesal/media-microservices
+          command: ["MovieReviewService"]
+          volumeMounts:
+            - mountPath: /media-microservices/config/jaeger-config.yml
+              name: movie-review-service-config
+              subPath: jaeger-config.yml
+            - mountPath: /media-microservices/config/service-config.json
+              name: movie-review-service-config
+              subPath: service-config.json
+          ports:
+            - name: http1
+              containerPort: 80
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: movie-review-service
+          name: movie-review-service-config
