@@ -1,0 +1,6 @@
+go 1.21
+
+use (
+	go-web-server
+	gen-go/media
+)
