@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: text-service-knative
+spec:
+  template:
+    spec:
+      containers:
+        - image: shyamjesal/media-microservices
+          command: ["TextService"]
+          volumeMounts:
+            - mountPath: /media-microservices/config/jaeger-config.yml
+              name: text-service-config
+              subPath: jaeger-config.yml
+            - mountPath: /media-microservices/config/service-config.json
+              name: text-service-config
+              subPath: service-config.json
+          ports:
+            - name: http1
+              containerPort: 80
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: text-service
+          name: text-service-config
