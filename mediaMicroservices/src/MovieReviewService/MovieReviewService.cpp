@@ -2,6 +2,8 @@
 #include <thrift/server/TThreadedServer.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
+#include <thrift/transport/THttpServer.h>
+#include <thrift/transport/THttpTransport.h>
 #include <signal.h>
 
 #include "MovieReviewHandler.h"
@@ -11,6 +13,7 @@
 using apache::thrift::server::TThreadedServer;
 using apache::thrift::transport::TServerSocket;
 using apache::thrift::transport::TFramedTransportFactory;
+using apache::thrift::transport::THttpServerTransportFactory;
 using apache::thrift::protocol::TBinaryProtocolFactory;
 using media_service::MovieReviewHandler;
 using namespace media_service;
@@ -72,7 +75,7 @@ int main(int argc, char *argv[]) {
               mongodb_client_pool,
               &review_storage_client_pool)),
       std::make_shared<TServerSocket>("0.0.0.0", port),
-      std::make_shared<TFramedTransportFactory>(),
+      std::make_shared<THttpServerTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>()
   );
   std::cout << "Starting the movie-review-service server ..." << std::endl;
