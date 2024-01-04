@@ -20,8 +20,9 @@ var (
 		},
 	}
 	protocol   = thrift.NewTBinaryProtocolFactoryConf(cfg)
-	k8s_suffix = ".default..default.10.110.187.38.sslip.io"
-	port       = ":80"
+	k8s_suffix = "-knative.default.10.110.187.38.sslip.io"
+	port       = 80
+	prefix     = "http://"
 )
 
 func registerUser(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +47,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Registering user: " + firstName + " " + lastName)
-	transport, err := getConnectionForUrl("http://user-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%suser-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewUserServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -74,7 +76,8 @@ func registerMovie(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Registering movie: %s %s\n", movieId, title)
-	transport, err := getConnectionForUrl("http://movie-id-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%smovie-id-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewMovieIdServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -104,7 +107,8 @@ func plotWrite(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("Creating thttp client")
 	fmt.Println("Creating thttp client")
-	transport, err := getConnectionForUrl("http://plot-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%splot-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewPlotServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -127,7 +131,8 @@ func movieInfoWrite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("Creating thttp client")
-	transport, err := getConnectionForUrl("http://movie-info-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%smovie-info-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewMovieInfoServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -153,7 +158,8 @@ func castInfoWrite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("Creating thttp client")
-	transport, err := getConnectionForUrl("http://cast-info-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%scast-info-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewCastInfoServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -211,7 +217,8 @@ func reviewCompose(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "apiReviewCompose %s: %s \n", title, "success")
 }
 func uploadUserId(username string, errChan chan error) {
-	transport, err := getConnectionForUrl("http://user-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%suser-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewUserServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -221,7 +228,8 @@ func uploadUserId(username string, errChan chan error) {
 }
 
 func uploadText(text string, errChan chan error) {
-	transport, err := getConnectionForUrl("http://text-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%stext-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewTextServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -231,7 +239,8 @@ func uploadText(text string, errChan chan error) {
 }
 
 func uploadMovieId(title string, rating int32, errChan chan error) {
-	transport, err := getConnectionForUrl("http://movie-id-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%smovie-id-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewMovieIdServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string
@@ -241,7 +250,8 @@ func uploadMovieId(title string, rating int32, errChan chan error) {
 }
 
 func uploadUniqueId(errChan chan error) {
-	transport, err := getConnectionForUrl("http://unique-id-service-knative" + k8s_suffix + port)
+	url := fmt.Sprintf("%sunique-id-service%s:%d", prefix, k8s_suffix, port)
+	transport, err := getConnectionForUrl(url)
 	client := media.NewUniqueIdServiceClientFactory(transport, protocol)
 	defer transport.Close()
 	var carrier map[string]string

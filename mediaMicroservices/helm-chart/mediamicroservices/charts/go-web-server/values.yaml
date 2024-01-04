@@ -15,3 +15,7 @@ container:
   env:
     - name: fqdn_suffix
       value: ".{{ .Release.Namespace }}.svc.cluster.local"
+    - name: port
+      value: "9090"
+    - name: prefix
+      value: "http://"
