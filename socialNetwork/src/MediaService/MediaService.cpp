@@ -1,7 +1,8 @@
 #include <signal.h>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TThreadedServer.h>
-#include <thrift/transport/TBufferTransports.h>
+#include <thrift/transport/THttpServer.h>
+#include <thrift/transport/THttpTransport.h>
 #include <thrift/transport/TServerSocket.h>
 
 #include "../utils.h"
@@ -10,7 +11,7 @@
 
 using apache::thrift::protocol::TBinaryProtocolFactory;
 using apache::thrift::server::TThreadedServer;
-using apache::thrift::transport::TFramedTransportFactory;
+using apache::thrift::transport::THttpServerTransportFactory;
 using apache::thrift::transport::TServerSocket;
 using namespace social_network;
 
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
   TThreadedServer server(
       std::make_shared<MediaServiceProcessor>(std::make_shared<MediaHandler>()),
       server_socket,
-      std::make_shared<TFramedTransportFactory>(),
+      std::make_shared<THttpServerTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>());
 
   LOG(info) << "Starting the media-service server...";
