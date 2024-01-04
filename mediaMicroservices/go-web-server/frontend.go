@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"os"
+	"strconv"
 	//"github.com/go-chi/chi/v5/middleware"
 )
 
@@ -31,6 +32,21 @@ func main() {
 	if fqdnSuffix != "" {
 		k8s_suffix = fqdnSuffix
 		fmt.Printf("fqdn_suffix set to %s\n", fqdnSuffix)
+	}
+	portEnv := os.Getenv("port")
+	if portEnv != "" {
+		portInt, err := strconv.Atoi(portEnv)
+		if err != nil {
+			fmt.Printf("port %s is not a valid integer\n", portEnv)
+		} else {
+			port = portInt
+			fmt.Printf("port set to %s\n", portEnv)
+		}
+	}
+	prefixEnv, ok := os.LookupEnv("prefix")
+	if ok {
+		prefix = prefixEnv
+		fmt.Printf("prefix set to %s\n", prefixEnv)
 	}
 	r := chi.NewRouter()
 	//r.Use(middleware.Logger)
