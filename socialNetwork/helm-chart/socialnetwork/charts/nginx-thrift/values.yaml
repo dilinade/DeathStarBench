@@ -7,7 +7,7 @@ ports:
 type: NodePort
 
 container:
-  image: yg397/openresty-thrift
+  image: shyamjesal/social-openresty-thrift
   imageVersion: xenial
   name: nginx-thrift
   ports: 
@@ -44,7 +44,7 @@ initContainer:
   - name: keys
     mountPath: /keys
   command: "/bin/sh" 
-  args: ["-c", "git clone https://github.com/delimitrou/DeathStarBench.git /DeathStarBench &&
+  args: ["-c", "git clone -b lua-thttp https://github.com/dilinade/DeathStarBench.git /DeathStarBench &&
             cp -r /DeathStarBench/socialNetwork/gen-lua/* /gen-lua/ &&
             cp -r /DeathStarBench/socialNetwork/docker/openresty-thrift/lua-thrift/* /lua-thrift/ &&
             cp -r /DeathStarBench/socialNetwork/nginx-web-server/lua-scripts/* /lua-scripts/ &&
