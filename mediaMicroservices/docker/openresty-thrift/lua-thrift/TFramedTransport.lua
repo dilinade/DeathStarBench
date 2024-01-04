@@ -17,10 +17,10 @@
 -- under the License.
 --
 
+local Thrift = require 'Thrift'
 local TTransport = require 'TTransport'
 local libluabpack = require 'libluabpack'
 local TProtocol = require 'TProtocol'
-local Thrift = require 'Thrift'
 local TProtocolException = TProtocol.TProtocolException
 local TTransportBase = TTransport.TTransportBase
 local TTransportFactoryBase = TTransport.TTransportFactoryBase
