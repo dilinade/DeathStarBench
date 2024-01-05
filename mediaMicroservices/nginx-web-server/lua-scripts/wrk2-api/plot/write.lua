@@ -1,5 +1,6 @@
 local _M = {}
 local k8s_suffix = os.getenv("fqdn_suffix")
+local port = os.getenv("port")
 if (k8s_suffix == nil) then
   k8s_suffix = ""
 end
@@ -36,7 +37,7 @@ function _M.WritePlot()
     ngx.exit(ngx.HTTP_BAD_REQUEST)
   end
 
-  local client = GenericObjectPool:connection(PlotServiceClient, "plot-service" .. k8s_suffix, 9090)
+  local client = GenericObjectPool:connection(PlotServiceClient, "plot-service" .. k8s_suffix, tonumber(port))
   client:WritePlot(req_id, plot["plot_id"], plot["plot"], carrier)
   GenericObjectPool:returnConnection(client)
 end

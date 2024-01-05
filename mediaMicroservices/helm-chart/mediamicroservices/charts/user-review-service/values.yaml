@@ -1,15 +1,15 @@
 name: user-review-service
 
 ports:
-  - port: 9090
-    targetPort: 9090
+  - port: 80
+    targetPort: 80
 
 container:
   command: UserReviewService
-  image: yg397/media-microservices
+  image: shyamjesal/media-microservices
   name: user-review-service
   ports:
-    - containerPort: 9090
+    - containerPort: 80
 
 configMaps:
   - name: jaeger-config.yml

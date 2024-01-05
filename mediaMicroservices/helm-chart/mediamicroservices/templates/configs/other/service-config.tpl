@@ -2,12 +2,12 @@
 {
   "secret": "secret",
   "unique-id-service": {
-    "addr": "unique-id-service",
-    "port": 9090
+    "addr": "unique-id-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "movie-id-service": {
-    "addr": "movie-id-service",
-    "port": 9090
+    "addr": "movie-id-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "movie-id-mongodb": {
     "addr": "movie-id-mongodb",
@@ -26,32 +26,32 @@
     "port": 11211
   },
   "text-service": {
-    "addr": "text-service",
-    "port": 9090
+    "addr": "text-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "rating-service": {
-    "addr": "rating-service",
-    "port": 9090
+    "addr": "rating-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "rating-redis": {
     "addr": "rating-redis",
     "port": 6379
   },
   "user-service": {
-    "addr": "user-service",
-    "port": 9090
+    "addr": "user-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "compose-review-service": {
-    "addr": "compose-review-service",
-    "port": 9090
+    "addr": "compose-review-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "compose-review-memcached": {
     "addr": "compose-review-memcached",
     "port": 11211
   },
   "review-storage-service": {
-    "addr": "review-storage-service",
-    "port": 9090
+    "addr": "review-storage-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "review-storage-mongodb": {
     "addr": "review-storage-mongodb",
@@ -62,8 +62,8 @@
     "port": 11211
   },
   "user-review-service": {
-    "addr": "user-review-service",
-    "port": 9090
+    "addr": "user-review-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "user-review-mongodb": {
     "addr": "user-review-mongodb",
@@ -74,8 +74,8 @@
     "port": 6379
   },
   "movie-review-service": {
-    "addr": "movie-review-service",
-    "port": 9090
+    "addr": "movie-review-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "movie-review-mongodb": {
     "addr": "movie-review-mongodb",
@@ -86,8 +86,8 @@
     "port": 6379
   },
   "cast-info-service": {
-    "addr": "cast-info-service",
-    "port": 9090
+    "addr": "cast-info-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "cast-info-mongodb": {
     "addr": "cast-info-mongodb",
@@ -98,8 +98,8 @@
     "port": 11211
   },
   "plot-service": {
-    "addr": "plot-service",
-    "port": 9090
+    "addr": "plot-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "plot-mongodb": {
     "addr": "plot-mongodb",
@@ -110,8 +110,8 @@
     "port": 11211
   },
   "movie-info-service": {
-    "addr": "movie-info-service",
-    "port": 9090
+    "addr": "movie-info-service-knative.default.svc.cluster.local",
+    "port": 80
   },
   "movie-info-mongodb": {
     "addr": "movie-info-mongodb",
@@ -122,8 +122,8 @@
     "port": 11211
   },
   "page-service": {
-    "addr": "page-service",
-    "port": 9090
+    "addr": "page-service-knative.default.svc.cluster.local",
+    "port": 80
   }
 }
 {{- end }}

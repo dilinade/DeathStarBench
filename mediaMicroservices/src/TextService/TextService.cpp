@@ -4,12 +4,15 @@
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
+#include <thrift/transport/THttpServer.h>
+#include <thrift/transport/THttpTransport.h>
 
 #include "../utils.h"
 #include "TextHandler.h"
 
 using apache::thrift::server::TThreadedServer;
 using apache::thrift::transport::TServerSocket;
+using apache::thrift::transport::THttpServerTransportFactory;
 using apache::thrift::transport::TFramedTransportFactory;
 using apache::thrift::protocol::TBinaryProtocolFactory;
 using namespace media_service;
@@ -38,7 +41,7 @@ int main(int argc, char *argv[]) {
         std::make_shared<TextServiceProcessor>(
             std::make_shared<TextHandler>(&compose_client_pool)),
         std::make_shared<TServerSocket>("0.0.0.0", port),
-        std::make_shared<TFramedTransportFactory>(),
+        std::make_shared<THttpServerTransportFactory>(),
         std::make_shared<TBinaryProtocolFactory>()
     );
 

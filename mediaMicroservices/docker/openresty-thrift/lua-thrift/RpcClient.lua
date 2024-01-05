@@ -3,7 +3,7 @@
 ----Date: 20151020
 ----
 local TSocket = require "TSocket"
-local TFramedTransport = require "TFramedTransport"
+local THttpTransport = require "THttpTransport"
 local TBinaryProtocol = require "TBinaryProtocol"
 local Object = require "Object"
 
@@ -21,8 +21,9 @@ function RpcClient:init(ip,port)
 		readTimeout = self.readTimeout
 	 }
 	socket:setTimeout(self.timeout)
-	local transport = TFramedTransport:new{
-		trans = socket
+	local transport = THttpTransport:new{
+		trans = socket,
+		isServer = false
 	}
 	local protocol = TBinaryProtocol:new{
 		trans = transport

@@ -1,15 +1,15 @@
 name: movie-info-service
 
 ports:
-  - port: 9090
-    targetPort: 9090
+  - port: 80
+    targetPort: 80
 
 container:
   command: MovieInfoService
-  image: yg397/media-microservices
+  image: shyamjesal/media-microservices
   name: movie-info-service
   ports:
-    - containerPort: 9090
+    - containerPort: 80
 
 configMaps:
   - name: jaeger-config.yml

@@ -6,14 +6,17 @@ ports:
     targetPort: 8080
 
 container:
-  image: yg397/openresty-thrift
+  image: shyamjesal/media-openresty-thrift
   imageVersion: xenial
+  imagePullPolicy: Always
   name: nginx-web-server
   ports:
     - containerPort: 8080
   env:
     - name: fqdn_suffix
       value: ".{{ .Release.Namespace }}.svc.cluster.local"
+    - name: port
+      value: "80"
   volumeMounts:
     - name: lua-scripts
       mountPath: /usr/local/openresty/nginx/lua-scripts
@@ -32,7 +35,7 @@ initContainer:
   command: "/bin/sh"
   args: [
       "-c",
-      "git clone https://github.com/delimitrou/DeathStarBench.git /DeathStarBench &&
+      "git clone -b lua-thttp https://github.com/dilinade/DeathStarBench.git /DeathStarBench &&
       cp -r /DeathStarBench/mediaMicroservices/gen-lua/* /gen-lua/ &&
       cp -r /DeathStarBench/mediaMicroservices/nginx-web-server/lua-scripts/* /lua-scripts/",
     ]
