@@ -1,9 +1,6 @@
 local _M = {}
 local k8s_suffix = os.getenv("fqdn_suffix")
 local port = os.getenv("port")
-ngx.log(ngx.INFO, port)
-ngx.log(ngx.WARN, port)
-ngx.log(ngx.ERR, port)
 if (k8s_suffix == nil) then
   k8s_suffix = ""
 end
@@ -13,6 +10,9 @@ local function _StrIsEmpty(s)
 end
 
 function _M.RegisterUser()
+  ngx.log(ngx.INFO, port)
+  ngx.log(ngx.WARN, port)
+  ngx.log(ngx.ERR, port)
   local bridge_tracer = require "opentracing_bridge_tracer"
   local GenericObjectPool = require "GenericObjectPool"
   local UserServiceClient = require 'media_service_UserService'
