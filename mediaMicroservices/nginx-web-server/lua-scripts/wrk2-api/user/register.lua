@@ -12,7 +12,7 @@ end
 function _M.RegisterUser()
   ngx.log(ngx.INFO, port)
   ngx.log(ngx.WARN, port)
-  ngx.log(ngx.ERR, port)
+  ngx.say(port)
   local bridge_tracer = require "opentracing_bridge_tracer"
   local GenericObjectPool = require "GenericObjectPool"
   local UserServiceClient = require 'media_service_UserService'
