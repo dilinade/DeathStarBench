@@ -1,6 +1,7 @@
 local _M = {}
 local k8s_suffix = os.getenv("fqdn_suffix")
 local port = os.getenv("port")
+ngx.log(ngx.INFO, "port: " .. port .. type(port) .. " k8s_suffix: " .. k8s_suffix)
 if (k8s_suffix == nil) then
   k8s_suffix = ""
 end
