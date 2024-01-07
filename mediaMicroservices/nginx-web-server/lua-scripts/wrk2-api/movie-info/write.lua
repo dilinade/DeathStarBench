@@ -1,6 +1,5 @@
 local _M = {}
 local k8s_suffix = os.getenv("fqdn_suffix")
-local port = os.getenv("port")
 if (k8s_suffix == nil) then
   k8s_suffix = ""
 end
@@ -53,7 +52,7 @@ function _M.WriteMovieInfo()
   end
 
 
-  local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service" .. k8s_suffix , tonumber(port))
+  local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service" .. k8s_suffix , 80)
   client:WriteMovieInfo(req_id, movie_info["movie_id"], movie_info["title"],
       casts, movie_info["plot_id"], movie_info["thumbnail_ids"],
       movie_info["photo_ids"], movie_info["video_ids"], tostring(movie_info["avg_rating"]),

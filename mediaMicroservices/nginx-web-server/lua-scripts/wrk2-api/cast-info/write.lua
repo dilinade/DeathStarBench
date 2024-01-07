@@ -1,6 +1,5 @@
 local _M = {}
 local k8s_suffix = os.getenv("fqdn_suffix")
-local port = os.getenv("port")
 if (k8s_suffix == nil) then
   k8s_suffix = ""
 end
@@ -38,7 +37,7 @@ function _M.WriteCastInfo()
     ngx.exit(ngx.HTTP_BAD_REQUEST)
   end
 
-  local client = GenericObjectPool:connection(CastInfoServiceClient, "cast-info-service" .. k8s_suffix, tonumber(port))
+  local client = GenericObjectPool:connection(CastInfoServiceClient, "cast-info-service" .. k8s_suffix, 80)
   client:WriteCastInfo(req_id, cast_info["cast_info_id"], cast_info["name"],
       cast_info["gender"], cast_info["intro"],  carrier)
   GenericObjectPool:returnConnection(client)
