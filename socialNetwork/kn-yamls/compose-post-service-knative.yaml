@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: compose-post-service-knative
+spec:
+  template:
+    spec:
+      containers:
+        - image: shyamjesal/social-network-microservices
+          command: ["ComposePostService"]
+          volumeMounts:
+            - mountPath: /social-network-microservices/config/jaeger-config.yml
+              name: compose-post-service-config
+              subPath: jaeger-config.yml
+            - mountPath: /social-network-microservices/config/service-config.json
+              name: compose-post-service-config
+              subPath: service-config.json
+          ports:
+            - name: http1
+              containerPort: 80
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: compose-post-service
+          name: compose-post-service-config

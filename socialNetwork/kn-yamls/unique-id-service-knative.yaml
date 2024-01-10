@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: unique-id-service-knative
+spec:
+  template:
+    spec:
+      containers:
+        - image: shyamjesal/social-network-microservices
+          command: ["UniqueIdService"]
+          volumeMounts:
+            - mountPath: /social-network-microservices/config/jaeger-config.yml
+              name: unique-id-service-config
+              subPath: jaeger-config.yml
+            - mountPath: /social-network-microservices/config/service-config.json
+              name: unique-id-service-config
+              subPath: service-config.json
+          ports:
+            - name: http1
+              containerPort: 80
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: unique-id-service
+          name: unique-id-service-config

@@ -1,15 +1,15 @@
 name: post-storage-service
 
 ports:
-  - port: 9090
-    targetPort: 9090
+  - port: 80
+    targetPort: 80
 
 container:
   command: PostStorageService
   image: shyamjesal/social-network-microservices
   name: post-storage-service
   ports: 
-  - containerPort: 9090
+  - containerPort: 80
 
 configMaps:
   - name: jaeger-config.yml
