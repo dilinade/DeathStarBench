@@ -7,7 +7,7 @@ ports:
 container:
   command: MediaService
   image: shyamjesal/social-network-microservices
-  name: media-service
+  name: media-service-container
   ports: 
   - containerPort: 80
 

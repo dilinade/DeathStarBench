@@ -7,7 +7,7 @@ ports:
 container:
   command: UrlShortenService
   image: shyamjesal/social-network-microservices
-  name: url-shorten-service
+  name: url-shorten-service-container
   ports: 
   - containerPort: 80
 

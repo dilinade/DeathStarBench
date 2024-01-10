@@ -7,7 +7,7 @@ ports:
 container:
   command: UniqueIdService
   image: shyamjesal/social-network-microservices
-  name: unique-id-service
+  name: unique-id-service-container
   ports: 
   - containerPort: 80
 

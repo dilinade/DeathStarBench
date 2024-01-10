@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     service: {{ .Values.name }}
-  name: {{ .Values.name }}
+  name: {{ .Values.container.name }}
 spec: 
   replicas: {{ .Values.replicas | default .Values.global.replicas }}
   selector:

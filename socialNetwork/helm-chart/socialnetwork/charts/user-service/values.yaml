@@ -7,7 +7,7 @@ ports:
 container:
   command: UserService
   image: shyamjesal/social-network-microservices
-  name: user-service
+  name: user-service-container
   ports: 
   - containerPort: 80
 

@@ -7,7 +7,7 @@ ports:
 container:
   command: UserMentionService
   image: shyamjesal/social-network-microservices
-  name: user-mention-service
+  name: user-mention-service-container
   ports: 
   - containerPort: 80
 

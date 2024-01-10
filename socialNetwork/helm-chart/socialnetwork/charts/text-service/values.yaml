@@ -7,7 +7,7 @@ ports:
 container:
   command: TextService
   image: shyamjesal/social-network-microservices
-  name: text-service
+  name: text-service-container
   ports: 
   - containerPort: 80
 

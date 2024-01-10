@@ -7,7 +7,7 @@ ports:
 container:
   command: HomeTimelineService
   image: shyamjesal/social-network-microservices
-  name: home-timeline-service
+  name: home-timeline-service-container
   ports: 
   - containerPort: 80
 

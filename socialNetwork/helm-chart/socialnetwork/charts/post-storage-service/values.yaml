@@ -7,7 +7,7 @@ ports:
 container:
   command: PostStorageService
   image: shyamjesal/social-network-microservices
-  name: post-storage-service
+  name: post-storage-service-container
   ports: 
   - containerPort: 80
 

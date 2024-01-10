@@ -7,7 +7,7 @@ ports:
 container:
   command: SocialGraphService
   image: shyamjesal/social-network-microservices
-  name: social-graph-service
+  name: social-graph-service-container
   ports: 
   - containerPort: 80
 
