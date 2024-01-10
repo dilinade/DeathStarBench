@@ -6,7 +6,7 @@ ports:
     targetPort: 8080
 
 container:
-  image: yg397/openresty-thrift
+  image: shyamjesal/social-openresty-thrift
   imageVersion: xenial
   name: nginx-web-server
   ports:
@@ -32,7 +32,7 @@ initContainer:
   command: "/bin/sh"
   args: [
       "-c",
-      "git clone https://github.com/delimitrou/DeathStarBench.git /DeathStarBench &&
+      "git clone -b lua-thttp https://github.com/dilinade/DeathStarBench.git /DeathStarBench &&
       cp -r /DeathStarBench/mediaMicroservices/gen-lua/* /gen-lua/ &&
       cp -r /DeathStarBench/mediaMicroservices/nginx-web-server/lua-scripts/* /lua-scripts/",
     ]
