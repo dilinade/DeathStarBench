@@ -1,24 +1,39 @@
 {{- define "hotelreservation.templates.baseDeploymentMemcached" }}
+{{- $count :=  add .Values.global.memcached.HACount 1 | int }}
+{{- range $key, $item := untilStep 1 $count 1 }}
+{{- $rangeItem := $item -}}
+{{- with $ }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     {{- include "hotel-reservation.labels" . | nindent 4 }}
-    service: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
-  name: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
+    {{- include "hotel-reservation.backendLabels" . | nindent 4 }}
+    service: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
+  name: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
 spec:
   replicas: {{ .Values.replicas | default .Values.global.replicas }}
   selector:
     matchLabels:
       {{- include "hotel-reservation.selectorLabels" . | nindent 6 }}
-      service: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
-      app: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
+      {{- include "hotel-reservation.backendLabels" . | nindent 6 }}
+      service: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
+      app: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
   template:
     metadata:
       labels:
         {{- include "hotel-reservation.labels" . | nindent 8 }}
-        service: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
-        app: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
+        {{- include "hotel-reservation.backendLabels" . | nindent 8 }}
+        service: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
+        app: {{ .Values.name }}-{{ $rangeItem }}-{{ include "hotel-reservation.fullname" . }}
+      {{- if hasKey $.Values "annotations" }}
+      annotations:
+        {{ tpl $.Values.annotations . | nindent 8 | trim }}
+      {{- else if hasKey $.Values.global "annotations" }}
+      annotations:
+        {{ tpl $.Values.global.annotations . | nindent 8 | trim }}
+      {{- end }}
     spec:
       containers:
       {{- with .Values.container }}
@@ -29,19 +44,23 @@ spec:
         {{- range $cport := .ports }}
         - containerPort: {{ $cport.containerPort -}}
         {{ end }}
+        {{- if hasKey . "environments" }}
         env:
-          - name: MEMCACHED_CACHE_SIZE
-            value: {{ $.Values.global.memcached.environments.cacheSize | quote }}
-          - name: MEMCACHED_THREADS
-            value: {{ $.Values.global.memcached.environments.threads | quote }}
-        command:
-          - "memcached"
-          - "-c"
-          - "65536"
+          {{- range $variable, $value := .environments }}
+          - name: {{ $variable }}
+            value: {{ $value | quote }}
+          {{- end }}
+        {{- else if hasKey $.Values.global.memcached "environments" }}
+        env:
+          {{- range $variable, $value := $.Values.global.memcached.environments }}
+          - name: {{ $variable }}
+            value: {{ $value | quote }}
+          {{- end }}
+        {{- end }}
         {{- if .args}}
         args:
         {{- range $arg := .args}}
-        - {{ $arg }}
+        - {{ $arg | quote }}
         {{- end -}}
         {{- end }}
         {{- if .resources }}
@@ -55,9 +74,9 @@ spec:
       {{- if hasKey .Values "topologySpreadConstraints" }}
       topologySpreadConstraints:
         {{ tpl .Values.topologySpreadConstraints . | nindent 6 | trim }}
-      {{- else if hasKey $.Values.global  "topologySpreadConstraints" }}
+      {{- else if hasKey $.Values.global.memcached "topologySpreadConstraints" }}
       topologySpreadConstraints:
-        {{ tpl $.Values.global.topologySpreadConstraints . | nindent 6 | trim }}
+        {{ tpl $.Values.global.memcached.topologySpreadConstraints . | nindent 6 | trim }}
       {{- end }}
       hostname: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
       restartPolicy: {{ .Values.restartPolicy | default .Values.global.restartPolicy}}
@@ -76,4 +95,6 @@ spec:
       {{- else if hasKey $.Values.global "nodeSelector" }}
       nodeSelector: {{- toYaml .Values.global.nodeSelector | nindent 8 }}
       {{- end }}
+{{- end}}
+{{- end}}
 {{- end}}
